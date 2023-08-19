@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Political Bias Finder</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Uncover political bias in text</h1>
+    <label for="input_text">Enter some text below and press classify to see if there is any hidden bias:</label><br>
+    <textarea id="input_text" rows="4" cols="60"></textarea><br><br>
+    <button onclick="classifyText()">classify</button>
+    <button onclick="clearInput()">clear</button>
+    <div id="result"></div>
+    <br>
+    <h1>About</h1>
+    <p>
+        This toy uses a BERT-like model to look for political bias in text. The model was trained on text from congressional hearings/meetings and looks for similarities in word choice and order to determine if the text is more similar to a Democrat or Republican. The model is not very accurate and is only meant to be a demonstration of the idea.
+        <br>
+        In the coming stages, a larger corpus will be obtained and used to further fine-tune the model. Also, the app will access current headlines and blurbs from major publications and automatically classify them.
+    <script>
+        function classifyText() {
+            var inputText = document.getElementById("input_text").value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/classify", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById("result").innerHTML = "Classification Result: " + response.result;
+                }
+            };
+            
+            xhr.send(JSON.stringify({ input_text: inputText }));
+        }
+        function clearInput() {
+            document.getElementById("input_text").value = "";
+            document.getElementById("result").innerHTML = "";
+        }
+    </script>
+</body>
+</html>
