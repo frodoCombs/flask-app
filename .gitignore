@@ -1,3 +1,4 @@
 .venv
 __pycache__
 .new_venv/
+.py310_venv
